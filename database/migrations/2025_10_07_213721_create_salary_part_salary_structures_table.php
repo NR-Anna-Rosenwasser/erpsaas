@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('salary_structure_id')->constrained('salary_structures')->onDelete('cascade');
             $table->foreignId('salary_part_id')->constrained('salary_parts')->onDelete('cascade');
-            $table->decimal('amount', 15, 2)->nullable();
+            $table->decimal('amount', 15, 3)->nullable();
             $table->string("group")->default("base_salary");
             $table->timestamps();
         });

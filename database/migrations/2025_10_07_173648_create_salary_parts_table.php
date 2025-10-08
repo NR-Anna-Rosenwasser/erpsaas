@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('type')->default('base_salary');
             $table->string('basis')->default('fixed');
-            $table->decimal('amount', 15, 2);
+            $table->decimal('amount', 15, 3);
             $table->foreignId("debit_account_id")->nullable()->constrained("accounts")->nullOnDelete();
             $table->foreignId("credit_account_id")->nullable()->constrained("accounts")->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
