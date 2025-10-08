@@ -32,7 +32,7 @@ class SalaryPart extends Model
     protected $casts = [
         'type' => SalaryPartType::class,
         'basis' => SalaryPartBasis::class,
-        'amount' => 'decimal:2',
+        'amount' => 'decimal:3',
     ];
 
     public function company()
