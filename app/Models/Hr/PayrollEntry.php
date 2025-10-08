@@ -103,7 +103,7 @@ class PayrollEntry extends Model
             'transactionable_id' => $payrollEntry->id,
             "type" => "journal",
             "amount" => $totalDebit,
-            "posted_at" => now(),
+            "posted_at" => $data['to_date'],
             "description" => "Payroll for " . $payrollEntry->employee->contact->first_name . " " . $payrollEntry->employee->contact->last_name . " for period " . $payrollEntry->from_date . " to " . $payrollEntry->to_date,
         ]);
 
