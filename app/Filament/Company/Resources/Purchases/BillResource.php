@@ -369,7 +369,7 @@ class BillResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('due_date')
+            ->defaultSort('due_date', 'desc')
             ->columns([
                 Columns::id(),
                 Tables\Columns\TextColumn::make('status')
