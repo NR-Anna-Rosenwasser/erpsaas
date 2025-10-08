@@ -57,7 +57,10 @@ class SalaryStructureResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('salary_part_id')
                                     ->label('Part')
-                                    ->options(SalaryPart::all()->pluck('name', 'id'))
+                                    ->options(SalaryPart::all()->pluck('name', 'id')->map(function ($name, $id) {
+                                        $part = SalaryPart::find($id);
+                                        return "{$name} ({$part->type->getPrefix()}{$part->part_number})";
+                                    })->toArray())
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function (callable $set, $state) {
