@@ -22,6 +22,7 @@ class SalaryPart extends Model
         'name',
         'type',
         'basis',
+        'in_net_salary',
         'amount',
         'debit_account_id',
         'credit_account_id',

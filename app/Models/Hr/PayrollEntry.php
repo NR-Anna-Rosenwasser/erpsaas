@@ -49,12 +49,12 @@ class PayrollEntry extends Model
             } else {
                 $amount = $part->amount;
             }
-            if (in_array($part->type, [\App\Enums\Hr\SalaryPartType::EmployerCost])) {
-
-            } else if (in_array($part->type, [\App\Enums\Hr\SalaryPartType::Deduction])) {
-                $netSalary -= $amount;
-            } else {
-                $netSalary += $amount;
+            if ($part->in_net_salary) {
+                if (in_array($part->type, [\App\Enums\Hr\SalaryPartType::Deduction])) {
+                    $netSalary -= $amount;
+                } else {
+                    $netSalary += $amount;
+                }
             }
 
             if ($part->debitAccount && $part->creditAccount) {
@@ -62,13 +62,13 @@ class PayrollEntry extends Model
                     'account_id' => $part->debitAccount->id,
                     'type' => 'debit',
                     'amount' => $amount * 100,
-                    'description' => $part->description ?? null,
+                    'description' => $part->name . ($part->description ? '(' . $part->description  . ')' : ''),
                 ];
                 $journalEntries[] = [
                     'account_id' => $part->creditAccount->id,
                     'type' => 'credit',
                     'amount' => $amount * 100,
-                    'description' => $part->description ?? null,
+                    'description' => $part->name . ($part->description ? '(' . $part->description  . ')' : ''),
                 ];
             } else if ($part->debitAccount || $part->creditAccount) {
                 $account = $part->debitAccount ?? $part->creditAccount;
@@ -77,7 +77,7 @@ class PayrollEntry extends Model
                     'account_id' => $account->id,
                     'type' => $type,
                     'amount' => $amount * 100,
-                    'description' => $part->description ?? null,
+                    'description' => $part->name . ($part->description ? '(' . $part->description  . ')' : '')
                 ];
             }
         }
@@ -93,7 +93,7 @@ class PayrollEntry extends Model
         $totalDebit = collect($journalEntries)->where('type', 'debit')->sum('amount');
         $totalCredit = collect($journalEntries)->where('type', 'credit')->sum('amount');
         if ($totalDebit !== $totalCredit) {
-            throw new \Exception("Journal entries do not balance: Debit = $totalDebit, Credit = $totalCredit");
+            throw new \Exception("Error: Journal entries do not balance. Debit = $totalDebit, Credit = $totalCredit");
         }
 
         $payrollEntry = self::create($data);

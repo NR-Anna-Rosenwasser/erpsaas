@@ -44,6 +44,14 @@ class SalaryPartResource extends Resource
                     ->columns(),
                 Forms\Components\Section::make('Configuration')
                     ->schema([
+                        Forms\Components\Toggle::make('in_net_salary')
+                            ->label('Include in Net Salary')
+                            ->default(true)
+                            ->live()
+                            ->disabled(fn ($record, $get) => $get('type') === SalaryPartType::EmployerCost)
+                            ->disabledOn("edit")
+                            ->columnSpanFull()
+                            ->helperText('If enabled, this salary part will be included in the calculation of the net salary.'),
                         Forms\Components\Select::make('type')
                             ->localizeLabel()
                             ->options(SalaryPartType::class)
@@ -53,6 +61,8 @@ class SalaryPartResource extends Resource
                             ->afterStateUpdated(function(Set $set, SalaryPartType $state) {
                                 if ($state === SalaryPartType::BaseSalary) {
                                     $set('basis', SalaryPartBasis::Fixed);
+                                } else if ($state === SalaryPartType::EmployerCost) {
+                                    $set('in_net_salary', false);
                                 }
                                 $set('part_number', SalaryPart::getNextSalaryPartNumber($state));
                             })
@@ -85,12 +95,16 @@ class SalaryPartResource extends Resource
                             ->default(0),
                         Forms\Components\Select::make('debit_account_id')
                             ->label('Debit Account')
-                            ->relationship('debitAccount', 'name')
+                            ->relationship('debitAccount', 'name', function(Builder $query) {
+                                $query->where('category', 'expense');
+                            })
                             ->searchable()
                             ->preload(),
                         Forms\Components\Select::make('credit_account_id')
                             ->label('Credit Account')
-                            ->relationship('creditAccount', 'name')
+                            ->relationship('creditAccount', 'name', function(Builder $query) {
+                                $query->where('category', 'liability');
+                            })
                             ->searchable()
                             ->preload(),
                     ])
