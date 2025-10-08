@@ -74,7 +74,6 @@ class SalaryStructureResource extends Resource
                                         return $part && $part->basis === SalaryPartBasis::Fixed ? currency() : '%';
                                     })
                                     ->minValue(0)
-                                    ->step(0.01)
                                     ->default(0),
                                 Forms\Components\Hidden::make('group')
                             ])
