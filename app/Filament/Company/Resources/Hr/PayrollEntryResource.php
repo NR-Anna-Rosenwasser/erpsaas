@@ -62,7 +62,16 @@ class PayrollEntryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('entry_number')
+                    ->label('Entry #')
+                    ->prefix('PE-')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('employee.employee_number')
+                    ->label('Employee #')
+                    ->searchable()
+                    ->sortable(),
+
             ])
             ->filters([
                 //

@@ -383,7 +383,7 @@ class InvoiceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('due_date')
+            ->defaultSort('due_date', 'desc')
             ->modifyQueryUsing(function (Builder $query, Tables\Contracts\HasTable $livewire) {
                 if (property_exists($livewire, 'recurringInvoice')) {
                     $recurringInvoiceId = $livewire->recurringInvoice;
