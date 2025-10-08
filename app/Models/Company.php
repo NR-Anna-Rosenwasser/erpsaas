@@ -208,8 +208,21 @@ class Company extends FilamentCompaniesCompany implements HasAvatar
         return $this->hasMany(Common\Vendor::class, 'company_id');
     }
 
+    /**
+     * HR Module relations
+     */
     public function employees(): HasMany
     {
         return $this->hasMany(Hr\Employee::class, 'company_id');
+    }
+
+    public function salaryParts(): HasMany
+    {
+        return $this->hasMany(Hr\SalaryPart::class, 'company_id');
+    }
+
+    public function salaryStructures(): HasMany
+    {
+        return $this->hasMany(Hr\SalaryStructure::class, 'company_id');
     }
 }
