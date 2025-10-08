@@ -383,7 +383,7 @@ class InvoiceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('due_date', 'desc')
+            ->defaultSort('due_date')
             ->modifyQueryUsing(function (Builder $query, Tables\Contracts\HasTable $livewire) {
                 if (property_exists($livewire, 'recurringInvoice')) {
                     $recurringInvoiceId = $livewire->recurringInvoice;
@@ -476,6 +476,33 @@ class InvoiceResource extends Resource
                     ->fromLabel('From due date')
                     ->untilLabel('To due date')
                     ->indicatorLabel('Due'),
+                Tables\Filters\SelectFilter::make('view')
+                    ->label('View')
+                    ->options([
+                        'all' => 'All invoices',
+                        'unpaid' => 'Unpaid invoices',
+                        'draft' => 'Draft invoices',
+                    ])
+                    ->default('unpaid')
+                    ->query(function (Builder $query, array $data) {
+                        $view = $data['value'];
+
+                        switch ($view) {
+                            case 'unpaid':
+                                $query->where('status', '!=', InvoiceStatus::Paid);
+                                break;
+                            case 'draft':
+                                $query->where('status', InvoiceStatus::Draft);
+                                break;
+                            case 'all':
+                            default:
+                                break;
+                        }
+
+                    })
+                    ->native(false)
+                    ->columnSpanFull()
+                    ->hiddenOn(InvoicesRelationManager::class),
             ])
             ->headerActions([
                 Tables\Actions\ExportAction::make()

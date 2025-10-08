@@ -369,7 +369,7 @@ class BillResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('due_date', 'desc')
+            ->defaultSort('due_date')
             ->columns([
                 Columns::id(),
                 Tables\Columns\TextColumn::make('status')
@@ -413,6 +413,31 @@ class BillResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->options(BillStatus::class)
                     ->native(false),
+                // Hide paid bills by default
+                Tables\Filters\SelectFilter::make('view')
+                    ->label('View')
+                    ->options([
+                        'unpaid' => 'Unpaid bills',
+                        'paid' => 'Paid bills',
+                        'all' => 'All bills',
+                    ])
+                    ->default('unpaid')
+                    ->native(false)
+                    ->query(function (Builder $query, array $data) {
+                        switch ($data['value']) {
+                            case 'unpaid':
+                                $query->where('status', '!=', BillStatus::Paid);
+                                break;
+                            case 'paid':
+                                $query->where('status', BillStatus::Paid);
+                                break;
+                            case 'all':
+                            default:
+                                // No-op
+                                break;
+                            }
+                    }),
+
                 Tables\Filters\TernaryFilter::make('has_payments')
                     ->label('Has payments')
                     ->queries(
