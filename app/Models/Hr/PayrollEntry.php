@@ -62,13 +62,13 @@ class PayrollEntry extends Model
                     'account_id' => $part->debitAccount->id,
                     'type' => 'debit',
                     'amount' => $amount * 100,
-                    'description' => $part->name . ($part->description ? '(' . $part->description  . ')' : ''),
+                    'description' => $part->name . ($part->description ? ' (' . $part->description  . ')' : ''),
                 ];
                 $journalEntries[] = [
                     'account_id' => $part->creditAccount->id,
                     'type' => 'credit',
                     'amount' => $amount * 100,
-                    'description' => $part->name . ($part->description ? '(' . $part->description  . ')' : ''),
+                    'description' => $part->name . ($part->description ? ' (' . $part->description  . ')' : ''),
                 ];
             } else if ($part->debitAccount || $part->creditAccount) {
                 $account = $part->debitAccount ?? $part->creditAccount;
@@ -77,7 +77,7 @@ class PayrollEntry extends Model
                     'account_id' => $account->id,
                     'type' => $type,
                     'amount' => $amount * 100,
-                    'description' => $part->name . ($part->description ? '(' . $part->description  . ')' : '')
+                    'description' => $part->name . ($part->description ? ' (' . $part->description  . ')' : '')
                 ];
             }
         }
