@@ -3,32 +3,33 @@
 namespace App\Models\Accounting;
 
 use App\Casts\RateCast;
-use App\Collections\Accounting\DocumentCollection;
-use App\Enums\Accounting\AdjustmentComputation;
-use App\Enums\Accounting\BillStatus;
-use App\Enums\Accounting\DocumentDiscountMethod;
-use App\Enums\Accounting\DocumentType;
-use App\Enums\Accounting\JournalEntryType;
-use App\Enums\Accounting\TransactionType;
-use App\Filament\Company\Resources\Purchases\BillResource;
-use App\Models\Banking\BankAccount;
-use App\Models\Common\Vendor;
 use App\Models\Company;
-use App\Models\Setting\DocumentDefault;
+use App\Models\Common\Vendor;
+use Illuminate\Support\Carbon;
 use App\Observers\BillObserver;
-use App\Utilities\Currency\CurrencyAccessor;
-use App\Utilities\Currency\CurrencyConverter;
+use App\Models\Common\Attachment;
+use App\Models\Banking\BankAccount;
+use App\Enums\Accounting\BillStatus;
 use Filament\Actions\MountableAction;
 use Filament\Actions\ReplicateAction;
-use Illuminate\Database\Eloquent\Attributes\CollectedBy;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
+use App\Enums\Accounting\DocumentType;
+use App\Models\Setting\DocumentDefault;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\Accounting\TransactionType;
+use Illuminate\Database\Eloquent\Builder;
+use App\Enums\Accounting\JournalEntryType;
+use App\Utilities\Currency\CurrencyAccessor;
+use App\Utilities\Currency\CurrencyConverter;
+use App\Enums\Accounting\AdjustmentComputation;
+use App\Enums\Accounting\DocumentDiscountMethod;
+use App\Collections\Accounting\DocumentCollection;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
+use App\Filament\Company\Resources\Purchases\BillResource;
 
 #[CollectedBy(DocumentCollection::class)]
 #[ObservedBy(BillObserver::class)]
@@ -68,6 +69,11 @@ class Bill extends Document
         'discount_computation' => AdjustmentComputation::class,
         'discount_rate' => RateCast::class,
     ];
+
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 
     public function vendor(): BelongsTo
     {

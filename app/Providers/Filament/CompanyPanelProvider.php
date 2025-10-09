@@ -75,6 +75,7 @@ use App\Filament\Company\Resources\Hr\SalaryStructureResource;
 use App\Actions\FilamentCompanies\UpdateUserProfileInformation;
 use Wallo\FilamentCompanies\Actions\GenerateRedirectForProvider;
 use App\Filament\Company\Resources\Accounting\TransactionResource;
+use App\Filament\Company\Resources\Common\AttachmentResource;
 use App\Filament\Company\Resources\Sales\RecurringInvoiceResource;
 
 class CompanyPanelProvider extends PanelProvider

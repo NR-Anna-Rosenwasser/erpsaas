@@ -6,6 +6,7 @@ use App\Filament\Company\Resources\Purchases\BillResource;
 use App\Filament\Company\Resources\Purchases\VendorResource;
 use App\Models\Accounting\Bill;
 use Filament\Actions;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -71,6 +72,17 @@ class ViewBill extends ViewRecord
                         TextEntry::make('paid_at')
                             ->label('Paid at')
                             ->date(),
+                        TextEntry::make('attachments')
+                            ->label('Receipts')
+                            ->formatStateUsing(function(Bill $record) {
+                                if ($record->has("attachments")) {
+                                    return "Has receipts";
+                                } else {
+                                    return "No receipts";
+                                }
+                            })
+                            ->badge()
+                            ->color(static fn (Bill $record) => $record->has("attachments") ? 'success' : 'secondary'),
                     ]),
             ]);
     }
@@ -79,6 +91,7 @@ class ViewBill extends ViewRecord
     {
         return [
             BillResource\RelationManagers\PaymentsRelationManager::class,
+            BillResource\RelationManagers\AttachmentsRelationManager::class,
         ];
     }
 }
