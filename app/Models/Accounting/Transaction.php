@@ -3,29 +3,31 @@
 namespace App\Models\Accounting;
 
 use App\Concerns\Blamable;
-use App\Concerns\CompanyOwned;
-use App\Enums\Accounting\AccountCategory;
-use App\Enums\Accounting\AccountType;
-use App\Enums\Accounting\PaymentMethod;
-use App\Enums\Accounting\TransactionType;
-use App\Filament\Company\Resources\Accounting\TransactionResource\Pages\ViewTransaction;
-use App\Filament\Company\Resources\Purchases\BillResource\Pages\ViewBill;
-use App\Filament\Company\Resources\Sales\InvoiceResource\Pages\ViewInvoice;
-use App\Models\Banking\BankAccount;
 use App\Models\Common\Client;
-use App\Models\Common\Contact;
 use App\Models\Common\Vendor;
+use App\Concerns\CompanyOwned;
+use App\Models\Common\Contact;
+use App\Models\Common\Attachment;
+use Illuminate\Support\Collection;
+use App\Models\Banking\BankAccount;
+use App\Enums\Accounting\AccountType;
 use App\Observers\TransactionObserver;
-use Database\Factories\Accounting\TransactionFactory;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Enums\Accounting\PaymentMethod;
+use Illuminate\Database\Eloquent\Model;
+use App\Enums\Accounting\AccountCategory;
+use App\Enums\Accounting\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Collection;
+use Database\Factories\Accounting\TransactionFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Filament\Company\Resources\Purchases\BillResource\Pages\ViewBill;
+use App\Filament\Company\Resources\Sales\InvoiceResource\Pages\ViewInvoice;
+use App\Filament\Company\Resources\Accounting\TransactionResource\Pages\ViewTransaction;
 
 #[ObservedBy(TransactionObserver::class)]
 class Transaction extends Model
@@ -64,6 +66,11 @@ class Transaction extends Model
         'posted_at' => 'date',
         'meta' => 'array',
     ];
+
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 
     public function account(): BelongsTo
     {

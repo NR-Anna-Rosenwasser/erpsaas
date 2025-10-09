@@ -2,15 +2,15 @@
 
 namespace App\Models\Accounting;
 
-use App\Collections\Accounting\JournalEntryCollection;
 use App\Concerns\Blamable;
 use App\Concerns\CompanyOwned;
-use App\Enums\Accounting\JournalEntryType;
-use Database\Factories\Accounting\JournalEntryFactory;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\Accounting\JournalEntryType;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Collections\Accounting\JournalEntryCollection;
+use Database\Factories\Accounting\JournalEntryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class JournalEntry extends Model
 {

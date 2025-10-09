@@ -157,6 +157,7 @@ class ViewTransaction extends ViewRecord
     {
         return [
             TransactionResource\RelationManagers\JournalEntriesRelationManager::class,
+            TransactionResource\RelationManagers\AttachmentsRelationManager::class,
         ];
     }
 }
