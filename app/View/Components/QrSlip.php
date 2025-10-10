@@ -45,6 +45,9 @@ class QrSlip extends Component
             default:
                 die("Currency not supported for QR Payment Slip: " . $this->currency);
         }
+        if ($this->amount <= 0) {
+            return;
+        }
         $this->number = $number;
         $this->reference = $reference;
         $this->generateQrPaymentSlip();
@@ -79,7 +82,7 @@ class QrSlip extends Component
                 $this->client->addressLine2,
                 $this->client->postalCode,
                 $this->client->city,
-                Country::where("native_name", $this->client->country)->first()->iso_code_2 ?? die("Country not found: " . $this->client->country)
+                $this->client->countryCode ?? die("Country code not found for client: " . $this->client->name)
             )
         );
 
