@@ -54,8 +54,7 @@ abstract class Document extends Model
                     'documentType' => $record::documentType(),
                     'id' => $record->id,
                 ]);
-
-                $livewire->js("window.printPdf('{$url}')");
+                $livewire->js("window.printPdf('{$url}', 'Print {$record::documentType()->getLabel()} #{$record->documentNumber()}'); ");
             });
     }
 
