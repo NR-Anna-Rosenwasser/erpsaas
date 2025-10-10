@@ -66,7 +66,7 @@ class QrSlip extends Component
                 "",
                 $this->company->postalCode,
                 $this->company->city,
-                Country::where("native_name", $this->company->country)->first()->iso_code_2 ?? die("Country not found: " . $this->company->country)
+                $this->company->countryCode ?? die("Country code not found for company: " . $this->company->name)
             )
         );
         $qrBill->setCreditorInformation(
