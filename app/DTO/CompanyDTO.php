@@ -14,6 +14,7 @@ readonly class CompanyDTO
         public string $state,
         public string $postalCode,
         public string $country,
+        public string $countryCode,
     ) {}
 
     public static function fromModel(Company $company): self
@@ -29,6 +30,7 @@ readonly class CompanyDTO
             state: $address?->state?->name ?? '',
             postalCode: $address?->postal_code ?? '',
             country: $address?->country?->name ?? '',
+            countryCode: $address?->country?->iso_code_2 ?? '',
         );
     }
 
