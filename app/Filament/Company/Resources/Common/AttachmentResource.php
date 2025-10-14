@@ -25,6 +25,7 @@ class AttachmentResource extends Resource
             ->schema([
                 Forms\Components\FileUpload::make('filepath')
                     ->required()
+                    ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, \Illuminate\Http\UploadedFile $file): string => (string) str($file->getClientOriginalName())->prepend(time() . '-'))
                     ->storeFileNamesIn('filename')
                     ->directory('attachments/company-' . auth()->user()->current_company_id . "/" . date('Y/m'))
                     ->maxSize(10240) // 10 MB
