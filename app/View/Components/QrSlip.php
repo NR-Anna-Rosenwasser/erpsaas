@@ -40,7 +40,7 @@ class QrSlip extends Component
                 break;
             case "EUR":
                 // Remove the first three characters (e.g. "€ ") and convert to float
-                $this->amount = (float) filter_var(substr($amount, 2), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                $this->amount = (float) floatval(str_replace(',', '.', str_replace('.', '', substr($amount, 3))));
                 break;
             default:
                 die("Currency not supported for QR Payment Slip: " . $this->currency);
